@@ -492,7 +492,9 @@
   }
 
   // ── Submit ─────────────────────────────────────────────────────────
-  function submitForm() {
+  const FORMSPREE_URL = 'https://formspree.io/f/xnjlwvdw';
+
+  async function submitForm() {
     const name = document.getElementById('name').value.trim();
     if (!name) {
       alert('Merci d\'indiquer ton prénom et nom !');
@@ -518,6 +520,16 @@
     };
 
     saveResponse(entry);
+
+    try {
+      await fetch(FORMSPREE_URL, {
+        method: 'POST',
+        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+        body: JSON.stringify(entry)
+      });
+    } catch (e) {
+      console.error('Formspree error:', e);
+    }
 
     document.getElementById('form-state').style.display = 'none';
     document.getElementById('success-state').style.display = 'block';
