@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Anniversaire de Thibault 🎉</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --violet-deep: #2D1B69;
+      --violet-mid: #6B3FA0;
+      --violet-light: #9B6FD4;
+      --violet-pale: #E8DEFF;
+      --violet-glow: #C4A8FF;
+      --cream: #FDF9FF;
+      --text-dark: #1A0A3C;
+      --text-mid: #4A3068;
+      --gold: #D4A843;
+      --success: #5DBB8F;
+      --error: #E05C7A;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--text-dark);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Background */
+    .bg-canvas {
+      position: fixed; inset: 0; z-index: 0;
+      background: linear-gradient(135deg, #1A0A3C 0%, #2D1B69 40%, #6B3FA0 100%);
+      overflow: hidden;
+    }
+    .bg-canvas::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 80% 20%, rgba(196,168,255,0.18) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 60% at 10% 80%, rgba(107,63,160,0.3) 0%, transparent 60%);
+    }
+    .star {
+      position: absolute;
+      border-radius: 50%;
+      background: white;
+      animation: twinkle var(--dur, 3s) ease-in-out infinite var(--delay, 0s);
+    }
+    @keyframes twinkle {
+      0%, 100% { opacity: var(--min-op, 0.2); transform: scale(1); }
+      50% { opacity: var(--max-op, 0.8); transform: scale(1.3); }
+    }
+
+    /* Layout */
+    .page-wrapper {
+      position: relative; z-index: 1;
+      min-height: 100vh;
+      display: flex; flex-direction: column; align-items: center;
+      padding: 3rem 1.5rem 4rem;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+      animation: fadeDown 0.8s ease both;
+    }
+    .header-badge {
+      display: inline-block;
+      background: rgba(212,168,67,0.15);
+      border: 1px solid rgba(212,168,67,0.4);
+      color: var(--gold);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 0.4rem 1rem;
+      border-radius: 100px;
+      margin-bottom: 1.2rem;
+    }
+    .header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.2rem, 6vw, 3.8rem);
+      color: white;
+      line-height: 1.15;
+      margin-bottom: 0.6rem;
+    }
+    .header h1 em {
+      font-style: italic;
+      color: var(--violet-glow);
+    }
+    .header-dates {
+      color: rgba(255,255,255,0.65);
+      font-size: 0.95rem;
+      font-weight: 300;
+      letter-spacing: 0.04em;
+    }
+
+    /* Card */
+    .card {
+      width: 100%;
+      max-width: 640px;
+      background: rgba(255,255,255,0.97);
+      border-radius: 24px;
+      box-shadow:
+        0 0 0 1px rgba(155,111,212,0.15),
+        0 24px 80px rgba(45,27,105,0.35),
+        0 4px 16px rgba(45,27,105,0.15);
+      padding: 2.5rem 2.5rem;
+      animation: fadeUp 0.8s 0.2s ease both;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem;
+      color: var(--violet-deep);
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, var(--violet-pale), transparent);
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--violet-pale);
+      margin: 1.8rem 0;
+    }
+
+    /* Form */
+    .field { margin-bottom: 1.2rem; }
+    label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--text-mid);
+      margin-bottom: 0.45rem;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+    input[type="text"],
+    input[type="email"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1.5px solid #E0D5F5;
+      border-radius: 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      color: var(--text-dark);
+      background: white;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+      appearance: none;
+    }
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--violet-light);
+      box-shadow: 0 0 0 3px rgba(155,111,212,0.15);
+    }
+    textarea { resize: vertical; min-height: 80px; }
+
+    /* Pill selectors */
+    .pill-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+    }
+    .pill-group input[type="radio"],
+    .pill-group input[type="checkbox"] {
+      display: none;
+    }
+    .pill-group label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.5rem 1rem;
+      border-radius: 100px;
+      border: 1.5px solid #E0D5F5;
+      font-size: 0.88rem;
+      font-weight: 400;
+      color: var(--text-mid);
+      text-transform: none;
+      letter-spacing: 0;
+      cursor: pointer;
+      transition: all 0.18s;
+      background: white;
+      user-select: none;
+    }
+    .pill-group input:checked + label {
+      background: var(--violet-deep);
+      border-color: var(--violet-deep);
+      color: white;
+    }
+    .pill-group label:hover {
+      border-color: var(--violet-light);
+      color: var(--violet-mid);
+    }
+    .pill-group input:checked + label:hover {
+      color: white;
+    }
+
+    /* Time grid */
+    .time-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.6rem;
+    }
+
+    /* Submit button */
+    .btn-submit {
+      width: 100%;
+      padding: 1rem;
+      background: linear-gradient(135deg, var(--violet-deep), var(--violet-mid));
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      letter-spacing: 0.03em;
+      transition: all 0.2s;
+      box-shadow: 0 4px 20px rgba(107,63,160,0.35);
+      margin-top: 0.5rem;
+    }
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(107,63,160,0.45);
+    }
+    .btn-submit:active { transform: translateY(0); }
+
+    /* Success */
+    .success-state {
+      display: none;
+      text-align: center;
+      padding: 2rem 0 1rem;
+    }
+    .success-icon {
+      width: 72px; height: 72px;
+      background: linear-gradient(135deg, var(--violet-light), var(--violet-mid));
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2rem;
+      margin: 0 auto 1.5rem;
+      box-shadow: 0 8px 24px rgba(107,63,160,0.35);
+    }
+    .success-state h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      color: var(--violet-deep);
+      margin-bottom: 0.6rem;
+    }
+    .success-state p {
+      color: var(--text-mid);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    /* Footer */
+    .footer {
+      margin-top: 2rem;
+      text-align: center;
+      color: rgba(255,255,255,0.35);
+      font-size: 0.78rem;
+      animation: fadeUp 0.8s 0.4s ease both;
+    }
+    .footer a {
+      color: rgba(196,168,255,0.5);
+      text-decoration: none;
+    }
+    .footer a:hover { color: var(--violet-glow); }
+
+    /* Animations */
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Responsive */
+    @media (max-width: 520px) {
+      .card { padding: 1.8rem 1.5rem; }
+      .time-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Conditional arrival day display */
+    #arrival-friday-block, #arrival-saturday-block { display: none; }
+  </style>
+</head>
+<body>
+
+<div class="bg-canvas" id="bgCanvas"></div>
+
+<div class="page-wrapper">
+
+  <header class="header">
+    <div class="header-badge">✦ Invitation ✦</div>
+    <h1>L'anniversaire<br>de <em>Thibault</em></h1>
+    <p class="header-dates">22 — 25 mai 2025 · Chez moi</p>
+  </header>
+
+  <div class="card">
+    <div id="form-state">
+
+      <!-- Identité -->
+      <p class="section-title">👤 Qui es-tu ?</p>
+      <div class="field">
+        <label>Ton prénom & nom</label>
+        <input type="text" id="name" placeholder="Marie Dupont" />
+      </div>
+      <div class="field">
+        <label>Ton email (facultatif)</label>
+        <input type="email" id="email" placeholder="marie@email.com" />
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Arrivée -->
+      <p class="section-title">🗓️ Quand arrives-tu ?</p>
+      <div class="field">
+        <div class="pill-group" id="arrival-day-group">
+          <input type="radio" name="arrival-day" id="ad-friday" value="Vendredi 23 mai" />
+          <label for="ad-friday">Vendredi 23 mai</label>
+
+          <input type="radio" name="arrival-day" id="ad-saturday" value="Samedi 24 mai" />
+          <label for="ad-saturday">Samedi 24 mai</label>
+        </div>
+      </div>
+
+      <!-- Heure vendredi -->
+      <div id="arrival-friday-block" class="field">
+        <label>Heure d'arrivée (vendredi)</label>
+        <div class="pill-group">
+          <input type="radio" name="arrival-time" id="at-f1" value="Avant 18h" />
+          <label for="at-f1">Avant 18h</label>
+          <input type="radio" name="arrival-time" id="at-f2" value="18h–20h" />
+          <label for="at-f2">18h – 20h</label>
+          <input type="radio" name="arrival-time" id="at-f3" value="Après 20h" />
+          <label for="at-f3">Après 20h</label>
+        </div>
+      </div>
+
+      <!-- Heure samedi -->
+      <div id="arrival-saturday-block" class="field">
+        <label>Heure d'arrivée (samedi)</label>
+        <div class="pill-group">
+          <input type="radio" name="arrival-time" id="at-s1" value="Matin (avant 12h)" />
+          <label for="at-s1">Matin (avant 12h)</label>
+          <input type="radio" name="arrival-time" id="at-s2" value="Après-midi (12h–17h)" />
+          <label for="at-s2">Après-midi</label>
+          <input type="radio" name="arrival-time" id="at-s3" value="Soir (après 17h)" />
+          <label for="at-s3">Soir (après 17h)</label>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Transport -->
+      <p class="section-title">🚗 Comment viens-tu ?</p>
+      <div class="field">
+        <div class="pill-group">
+          <input type="radio" name="transport" id="tr-car" value="Voiture" />
+          <label for="tr-car">🚗 Voiture</label>
+
+          <input type="radio" name="transport" id="tr-train" value="Train" />
+          <label for="tr-train">🚆 Train</label>
+
+          <input type="radio" name="transport" id="tr-other" value="Autre" />
+          <label for="tr-other">✈️ Autre</label>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Départ -->
+      <p class="section-title">🧳 Quand repars-tu ?</p>
+      <div class="field">
+        <div class="pill-group">
+          <input type="radio" name="departure" id="dep-sun" value="Dimanche 25 mai" />
+          <label for="dep-sun">Dimanche 25 mai</label>
+
+          <input type="radio" name="departure" id="dep-mon" value="Lundi 26 mai" />
+          <label for="dep-mon">Lundi 26 mai</label>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Régime -->
+      <p class="section-title">🥗 Régime alimentaire</p>
+      <div class="field">
+        <div class="pill-group">
+          <input type="radio" name="diet" id="diet-none" value="Aucun" checked />
+          <label for="diet-none">Aucun régime particulier</label>
+
+          <input type="radio" name="diet" id="diet-vege" value="Végétarien" />
+          <label for="diet-vege">🌿 Végétarien</label>
+
+          <input type="radio" name="diet" id="diet-vegan" value="Vegan" />
+          <label for="diet-vegan">🌱 Vegan</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Allergies ou restrictions alimentaires</label>
+        <input type="text" id="allergies" placeholder="Noix, gluten, lactose…" />
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Message -->
+      <p class="section-title">💬 Un petit mot ?</p>
+      <div class="field">
+        <textarea id="message" placeholder="Hâte d'être là ! Besoin d'un covoiturage depuis Paris…"></textarea>
+      </div>
+
+      <button class="btn-submit" onclick="submitForm()">Confirmer ma présence ✨</button>
+
+    </div><!-- /form-state -->
+
+    <!-- Succès -->
+    <div class="success-state" id="success-state">
+      <div class="success-icon">🎉</div>
+      <h2>Super, à bientôt !</h2>
+      <p>Ta réponse a bien été enregistrée.<br>Thibault est prévenu, on t'attend avec impatience !</p>
+    </div>
+
+  </div><!-- /card -->
+
+  <footer class="footer">
+    <p>Organisé avec ♡ · <a href="admin.html">Accès admin</a></p>
+  </footer>
+
+</div><!-- /page-wrapper -->
+
+<script>
+  // ── Stars ──────────────────────────────────────────────────────────
+  const canvas = document.getElementById('bgCanvas');
+  for (let i = 0; i < 60; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() * 3 + 1;
+    s.style.cssText = `
+      width:${size}px; height:${size}px;
+      top:${Math.random()*100}%;
+      left:${Math.random()*100}%;
+      --dur:${2+Math.random()*4}s;
+      --delay:${Math.random()*4}s;
+      --min-op:${0.1+Math.random()*0.2};
+      --max-op:${0.5+Math.random()*0.5};
+    `;
+    canvas.appendChild(s);
+  }
+
+  // ── Show arrival time options based on day ─────────────────────────
+  document.querySelectorAll('input[name="arrival-day"]').forEach(radio => {
+    radio.addEventListener('change', function() {
+      document.getElementById('arrival-friday-block').style.display =
+        this.value.includes('Vendredi') ? 'block' : 'none';
+      document.getElementById('arrival-saturday-block').style.display =
+        this.value.includes('Samedi') ? 'block' : 'none';
+      // reset time selection
+      document.querySelectorAll('input[name="arrival-time"]').forEach(r => r.checked = false);
+    });
+  });
+
+  // ── Storage key ────────────────────────────────────────────────────
+  const STORAGE_KEY = 'thibault_bday_rsvp_v1';
+
+  function getResponses() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+    catch { return []; }
+  }
+
+  function saveResponse(data) {
+    const list = getResponses();
+    list.push(data);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+  }
+
+  // ── Submit ─────────────────────────────────────────────────────────
+  function submitForm() {
+    const name = document.getElementById('name').value.trim();
+    if (!name) {
+      alert('Merci d\'indiquer ton prénom et nom !');
+      document.getElementById('name').focus();
+      return;
+    }
+
+    const arrivalDay = document.querySelector('input[name="arrival-day"]:checked')?.value || '—';
+    const arrivalTime = document.querySelector('input[name="arrival-time"]:checked')?.value || '—';
+    const transport = document.querySelector('input[name="transport"]:checked')?.value || '—';
+    const departure = document.querySelector('input[name="departure"]:checked')?.value || '—';
+    const diet = document.querySelector('input[name="diet"]:checked')?.value || 'Aucun';
+    const allergies = document.getElementById('allergies').value.trim() || '—';
+    const message = document.getElementById('message').value.trim() || '';
+    const email = document.getElementById('email').value.trim() || '';
+
+    const entry = {
+      timestamp: new Date().toISOString(),
+      name, email,
+      arrivalDay, arrivalTime,
+      transport, departure,
+      diet, allergies, message
+    };
+
+    saveResponse(entry);
+
+    document.getElementById('form-state').style.display = 'none';
+    document.getElementById('success-state').style.display = 'block';
+  }
+</script>
+</body>
+</html>

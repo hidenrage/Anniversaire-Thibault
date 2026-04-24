@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin · Anniversaire Thibault</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --violet-deep: #2D1B69;
+      --violet-mid: #6B3FA0;
+      --violet-light: #9B6FD4;
+      --violet-pale: #E8DEFF;
+      --violet-glow: #C4A8FF;
+      --cream: #F7F3FF;
+      --text-dark: #1A0A3C;
+      --text-mid: #4A3068;
+      --gold: #D4A843;
+      --success: #5DBB8F;
+      --error: #E05C7A;
+      --bg: #0E0628;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text-dark);
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      position: fixed;
+      left: 0; top: 0; bottom: 0;
+      width: 260px;
+      background: linear-gradient(180deg, #1A0A3C 0%, #2D1B69 100%);
+      padding: 2.5rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      z-index: 10;
+      box-shadow: 4px 0 24px rgba(0,0,0,0.4);
+    }
+
+    .sidebar-logo {
+      font-family: 'Playfair Display', serif;
+      color: white;
+      font-size: 1.3rem;
+      margin-bottom: 0.3rem;
+    }
+    .sidebar-logo em { font-style: italic; color: var(--violet-glow); }
+    .sidebar-subtitle {
+      color: rgba(255,255,255,0.4);
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 2.5rem;
+    }
+
+    .stat-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 1rem 1.2rem;
+    }
+    .stat-card-label {
+      font-size: 0.7rem;
+      color: rgba(255,255,255,0.45);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.3rem;
+    }
+    .stat-card-value {
+      font-size: 2rem;
+      font-weight: 600;
+      color: white;
+      line-height: 1;
+    }
+    .stat-card-sub {
+      font-size: 0.75rem;
+      color: var(--violet-glow);
+      margin-top: 0.25rem;
+    }
+
+    .sidebar-actions {
+      margin-top: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+    .btn-side {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.65rem 1rem;
+      border-radius: 8px;
+      border: none;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.18s;
+      text-decoration: none;
+    }
+    .btn-export {
+      background: rgba(212,168,67,0.15);
+      color: var(--gold);
+      border: 1px solid rgba(212,168,67,0.25);
+    }
+    .btn-export:hover { background: rgba(212,168,67,0.25); }
+    .btn-clear {
+      background: rgba(224,92,122,0.1);
+      color: #F08FA4;
+      border: 1px solid rgba(224,92,122,0.2);
+    }
+    .btn-clear:hover { background: rgba(224,92,122,0.2); }
+    .btn-back {
+      background: rgba(255,255,255,0.06);
+      color: rgba(255,255,255,0.6);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .btn-back:hover { background: rgba(255,255,255,0.1); color: white; }
+
+    /* Main */
+    .main {
+      margin-left: 260px;
+      padding: 2.5rem 2rem;
+      min-height: 100vh;
+    }
+
+    .main-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .main-title {
+      font-family: 'Playfair Display', serif;
+      color: white;
+      font-size: 1.5rem;
+    }
+
+    .filters {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .filter-btn {
+      padding: 0.4rem 0.9rem;
+      border-radius: 100px;
+      border: 1.5px solid rgba(196,168,255,0.2);
+      background: rgba(255,255,255,0.05);
+      color: rgba(255,255,255,0.5);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.18s;
+    }
+    .filter-btn.active, .filter-btn:hover {
+      background: var(--violet-mid);
+      border-color: var(--violet-mid);
+      color: white;
+    }
+
+    /* Summary chips */
+    .summary-row {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+    .chip {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 100px;
+      padding: 0.45rem 1rem;
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.7);
+    }
+    .chip strong { color: white; }
+
+    /* Table */
+    .table-wrap {
+      overflow-x: auto;
+      border-radius: 16px;
+      box-shadow: 0 0 0 1px rgba(196,168,255,0.1), 0 8px 32px rgba(0,0,0,0.3);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: rgba(255,255,255,0.97);
+      font-size: 0.88rem;
+      min-width: 900px;
+    }
+    thead tr {
+      background: var(--violet-deep);
+      color: rgba(255,255,255,0.85);
+    }
+    thead th {
+      padding: 0.85rem 1rem;
+      text-align: left;
+      font-weight: 500;
+      font-size: 0.75rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    tbody tr {
+      border-bottom: 1px solid var(--violet-pale);
+      transition: background 0.15s;
+    }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: #F3EEFF; }
+    td {
+      padding: 0.85rem 1rem;
+      color: var(--text-dark);
+      vertical-align: middle;
+    }
+    td.name { font-weight: 600; color: var(--violet-deep); }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.25rem 0.65rem;
+      border-radius: 100px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    .badge-car { background: #EEF4FF; color: #3B5BDB; }
+    .badge-train { background: #F0FFF4; color: #2B8A3E; }
+    .badge-other { background: #FFF5E5; color: #C07700; }
+    .badge-vege { background: #F0FFF4; color: #2B8A3E; }
+    .badge-vegan { background: #E8F8F0; color: #1A7040; }
+    .badge-none { background: #F5F5F5; color: #777; }
+    .badge-friday { background: #EEF4FF; color: #364FC7; }
+    .badge-saturday { background: #F5F0FF; color: #6B3FA0; }
+    .badge-sun { background: #FFF0F6; color: #C2255C; }
+    .badge-mon { background: #FFF9DB; color: #846300; }
+    .badge-allergy { background: #FFF0F0; color: #C92A2A; }
+
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: rgba(255,255,255,0.3);
+    }
+    .empty-state .icon { font-size: 3rem; margin-bottom: 1rem; }
+    .empty-state p { font-size: 0.95rem; }
+
+    /* Password gate */
+    .gate {
+      position: fixed; inset: 0;
+      background: linear-gradient(135deg, #1A0A3C, #2D1B69);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+    }
+    .gate-card {
+      background: rgba(255,255,255,0.97);
+      border-radius: 20px;
+      padding: 2.5rem;
+      width: 100%;
+      max-width: 360px;
+      text-align: center;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.5);
+    }
+    .gate-card h2 {
+      font-family: 'Playfair Display', serif;
+      color: var(--violet-deep);
+      font-size: 1.4rem;
+      margin-bottom: 0.5rem;
+    }
+    .gate-card p {
+      color: var(--text-mid);
+      font-size: 0.88rem;
+      margin-bottom: 1.5rem;
+    }
+    .gate-card input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1.5px solid #E0D5F5;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
+      outline: none;
+      text-align: center;
+      letter-spacing: 0.1em;
+    }
+    .gate-card input:focus { border-color: var(--violet-light); box-shadow: 0 0 0 3px rgba(155,111,212,0.15); }
+    .gate-btn {
+      width: 100%;
+      padding: 0.9rem;
+      background: linear-gradient(135deg, var(--violet-deep), var(--violet-mid));
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .gate-btn:hover { opacity: 0.9; }
+    .gate-error { color: var(--error); font-size: 0.8rem; margin-top: 0.5rem; }
+
+    /* Mobile */
+    @media (max-width: 800px) {
+      .sidebar { display: none; }
+      .main { margin-left: 0; padding: 1.5rem 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Password Gate -->
+<div class="gate" id="gate">
+  <div class="gate-card">
+    <div style="font-size:2.5rem;margin-bottom:1rem">🔐</div>
+    <h2>Accès admin</h2>
+    <p>Entre le mot de passe pour voir les réponses de tes invités.</p>
+    <input type="password" id="pwd-input" placeholder="Mot de passe" onkeydown="if(event.key==='Enter')checkPwd()" />
+    <button class="gate-btn" onclick="checkPwd()">Entrer</button>
+    <div class="gate-error" id="gate-error"></div>
+    <p style="margin-top:1rem;font-size:0.75rem;color:#aaa">Mot de passe par défaut : <strong>thibault2025</strong></p>
+  </div>
+</div>
+
+<!-- Sidebar -->
+<aside class="sidebar">
+  <div class="sidebar-logo">Anniversaire<br>de <em>Thibault</em></div>
+  <div class="sidebar-subtitle">22 – 25 mai 2025</div>
+
+  <div class="stat-cards">
+    <div class="stat-card">
+      <div class="stat-card-label">Total invités</div>
+      <div class="stat-card-value" id="stat-total">0</div>
+      <div class="stat-card-sub">réponses reçues</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-label">Arrivent vendredi</div>
+      <div class="stat-card-value" id="stat-friday">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-label">Arrivent samedi</div>
+      <div class="stat-card-value" id="stat-saturday">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-label">Végé / Vegan</div>
+      <div class="stat-card-value" id="stat-diet">0</div>
+    </div>
+  </div>
+
+  <div class="sidebar-actions">
+    <button class="btn-side btn-export" onclick="exportCSV()">📥 Exporter en CSV</button>
+    <button class="btn-side btn-clear" onclick="clearAll()">🗑 Supprimer tout</button>
+    <a class="btn-side btn-back" href="index.html">← Retour au formulaire</a>
+  </div>
+</aside>
+
+<!-- Main -->
+<main class="main">
+  <div class="main-header">
+    <div class="main-title">Tableau des réponses</div>
+    <div class="filters">
+      <button class="filter-btn active" onclick="filter('all', this)">Tous</button>
+      <button class="filter-btn" onclick="filter('Vendredi', this)">Vendredi</button>
+      <button class="filter-btn" onclick="filter('Samedi', this)">Samedi</button>
+      <button class="filter-btn" onclick="filter('Voiture', this)">Voiture</button>
+      <button class="filter-btn" onclick="filter('Train', this)">Train</button>
+      <button class="filter-btn" onclick="filter('Végétarien', this)">Végé</button>
+      <button class="filter-btn" onclick="filter('Vegan', this)">Vegan</button>
+      <button class="filter-btn" onclick="filter('allergy', this)">Allergies</button>
+    </div>
+  </div>
+
+  <div class="summary-row" id="summary-row"></div>
+
+  <div class="table-wrap">
+    <table id="response-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Nom</th>
+          <th>Arrivée</th>
+          <th>Heure</th>
+          <th>Transport</th>
+          <th>Départ</th>
+          <th>Régime</th>
+          <th>Allergies</th>
+          <th>Message</th>
+          <th>Date réponse</th>
+        </tr>
+      </thead>
+      <tbody id="response-body"></tbody>
+    </table>
+  </div>
+
+  <div class="empty-state" id="empty-state" style="display:none">
+    <div class="icon">📭</div>
+    <p>Aucune réponse pour l'instant.<br>Partage le lien du formulaire à tes invités !</p>
+  </div>
+</main>
+
+<script>
+  const STORAGE_KEY = 'thibault_bday_rsvp_v1';
+  const PASSWORD = 'thibault2025';
+  let currentFilter = 'all';
+  let allData = [];
+
+  function checkPwd() {
+    const val = document.getElementById('pwd-input').value;
+    if (val === PASSWORD) {
+      document.getElementById('gate').style.display = 'none';
+      initDashboard();
+    } else {
+      document.getElementById('gate-error').textContent = 'Mot de passe incorrect.';
+      document.getElementById('pwd-input').value = '';
+      document.getElementById('pwd-input').focus();
+    }
+  }
+
+  function getResponses() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+    catch { return []; }
+  }
+
+  function initDashboard() {
+    allData = getResponses();
+    renderStats(allData);
+    renderSummary(allData);
+    renderTable(allData);
+  }
+
+  function renderStats(data) {
+    document.getElementById('stat-total').textContent = data.length;
+    document.getElementById('stat-friday').textContent = data.filter(r => r.arrivalDay?.includes('Vendredi')).length;
+    document.getElementById('stat-saturday').textContent = data.filter(r => r.arrivalDay?.includes('Samedi')).length;
+    document.getElementById('stat-diet').textContent = data.filter(r => r.diet === 'Végétarien' || r.diet === 'Vegan').length;
+  }
+
+  function renderSummary(data) {
+    const cars = data.filter(r => r.transport === 'Voiture').length;
+    const trains = data.filter(r => r.transport === 'Train').length;
+    const sunDep = data.filter(r => r.departure?.includes('Dimanche')).length;
+    const monDep = data.filter(r => r.departure?.includes('Lundi')).length;
+    const allergies = data.filter(r => r.allergies && r.allergies !== '—').length;
+
+    const row = document.getElementById('summary-row');
+    row.innerHTML = `
+      <div class="chip">🚗 Voiture <strong>${cars}</strong></div>
+      <div class="chip">🚆 Train <strong>${trains}</strong></div>
+      <div class="chip">☀️ Départ dimanche <strong>${sunDep}</strong></div>
+      <div class="chip">📅 Départ lundi <strong>${monDep}</strong></div>
+      <div class="chip">⚠️ Allergies <strong>${allergies}</strong></div>
+    `;
+  }
+
+  function renderTable(data) {
+    const body = document.getElementById('response-body');
+    const empty = document.getElementById('empty-state');
+    const tableWrap = document.querySelector('.table-wrap');
+
+    if (!data.length) {
+      body.innerHTML = '';
+      empty.style.display = 'block';
+      tableWrap.style.display = 'none';
+      return;
+    }
+    empty.style.display = 'none';
+    tableWrap.style.display = 'block';
+
+    body.innerHTML = data.map((r, i) => {
+      const transportBadge = r.transport === 'Voiture'
+        ? `<span class="badge badge-car">🚗 Voiture</span>`
+        : r.transport === 'Train'
+        ? `<span class="badge badge-train">🚆 Train</span>`
+        : `<span class="badge badge-other">✈️ ${r.transport||'—'}</span>`;
+
+      const dayBadge = r.arrivalDay?.includes('Vendredi')
+        ? `<span class="badge badge-friday">Vendredi</span>`
+        : r.arrivalDay?.includes('Samedi')
+        ? `<span class="badge badge-saturday">Samedi</span>`
+        : r.arrivalDay || '—';
+
+      const depBadge = r.departure?.includes('Dimanche')
+        ? `<span class="badge badge-sun">Dim. 25/05</span>`
+        : r.departure?.includes('Lundi')
+        ? `<span class="badge badge-mon">Lun. 26/05</span>`
+        : r.departure || '—';
+
+      const dietBadge = r.diet === 'Végétarien'
+        ? `<span class="badge badge-vege">🌿 Végé</span>`
+        : r.diet === 'Vegan'
+        ? `<span class="badge badge-vegan">🌱 Vegan</span>`
+        : `<span class="badge badge-none">—</span>`;
+
+      const allergyCell = r.allergies && r.allergies !== '—'
+        ? `<span class="badge badge-allergy">⚠️ ${r.allergies}</span>`
+        : '—';
+
+      const date = new Date(r.timestamp);
+      const dateStr = date.toLocaleDateString('fr-FR', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' });
+
+      return `<tr>
+        <td style="color:#bbb;font-size:0.8rem">${i+1}</td>
+        <td class="name">${r.name}</td>
+        <td>${dayBadge}</td>
+        <td style="color:var(--text-mid);font-size:0.82rem">${r.arrivalTime || '—'}</td>
+        <td>${transportBadge}</td>
+        <td>${depBadge}</td>
+        <td>${dietBadge}</td>
+        <td>${allergyCell}</td>
+        <td style="color:var(--text-mid);font-size:0.82rem;max-width:160px;white-space:normal">${r.message || '—'}</td>
+        <td style="color:#bbb;font-size:0.78rem;white-space:nowrap">${dateStr}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  function filter(type, btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentFilter = type;
+
+    let filtered = allData;
+    if (type === 'all') {
+      filtered = allData;
+    } else if (type === 'Vendredi') {
+      filtered = allData.filter(r => r.arrivalDay?.includes('Vendredi'));
+    } else if (type === 'Samedi') {
+      filtered = allData.filter(r => r.arrivalDay?.includes('Samedi'));
+    } else if (type === 'Voiture') {
+      filtered = allData.filter(r => r.transport === 'Voiture');
+    } else if (type === 'Train') {
+      filtered = allData.filter(r => r.transport === 'Train');
+    } else if (type === 'Végétarien') {
+      filtered = allData.filter(r => r.diet === 'Végétarien');
+    } else if (type === 'Vegan') {
+      filtered = allData.filter(r => r.diet === 'Vegan');
+    } else if (type === 'allergy') {
+      filtered = allData.filter(r => r.allergies && r.allergies !== '—');
+    }
+    renderTable(filtered);
+  }
+
+  function exportCSV() {
+    const data = getResponses();
+    if (!data.length) { alert('Aucune donnée à exporter.'); return; }
+    const headers = ['Nom','Email','Arrivée','Heure','Transport','Départ','Régime','Allergies','Message','Date'];
+    const rows = data.map(r => [
+      r.name, r.email, r.arrivalDay, r.arrivalTime, r.transport,
+      r.departure, r.diet, r.allergies, r.message,
+      new Date(r.timestamp).toLocaleString('fr-FR')
+    ].map(v => `"${(v||'').replace(/"/g,'""')}"`).join(','));
+    const csv = [headers.join(','), ...rows].join('\n');
+    const blob = new Blob(['\uFEFF'+csv], {type:'text/csv;charset=utf-8'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'anniversaire-thibault-invites.csv';
+    a.click();
+  }
+
+  function clearAll() {
+    if (confirm('Supprimer toutes les réponses ? Cette action est irréversible.')) {
+      localStorage.removeItem(STORAGE_KEY);
+      allData = [];
+      renderStats([]);
+      renderSummary([]);
+      renderTable([]);
+    }
+  }
+</script>
+</body>
+</html>
